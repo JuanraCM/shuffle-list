@@ -8,8 +8,6 @@ type List = {
   items: string[];
 };
 
-const lists: List[] = JSON.parse(localStorage.getItem('lists') || '[]');
-
 const shuffle = (array: string[]): string[] => {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -19,17 +17,47 @@ const shuffle = (array: string[]): string[] => {
   return array;
 };
 
-Alpine.data('app', () => ({
-  lists,
-  activeList: null as List | null,
-  editMode: false as boolean,
-  editList: { name: '', items: [''] } as List,
+Alpine.store('lists', JSON.parse(localStorage.getItem('lists') || '[]'));
+Alpine.store('activeList', false);
+Alpine.store('editMode', false);
+Alpine.store('editList', { name: '', items: [''] });
+
+Alpine.data('index', () => ({
+  isVisible(): boolean {
+    return !this.$store.activeList && !this.$store.editMode;
+  },
+  setActiveList(list: List): void {
+    this.$store.activeList = list;
+  },
+  setEditList(): void {
+    this.$store.editMode = true;
+  },
+}));
+
+Alpine.data('form', () => ({
+  isVisible(): boolean {
+    return this.$store.editMode as boolean;
+  },
+  addItem(): void {
+    (this.$store.editList as List).items.push('');
+  },
+  saveList(): void {
+    if (!this.$store.editList) return;
+
+    (this.$store.lists as List[]).push(this.$store.editList as List);
+    localStorage.setItem('lists', JSON.stringify(this.$store.lists));
+
+    this.$store.editMode = false;
+    this.$store.editList = { name: '', items: [''] };
+  },
+}));
+
+Alpine.data('active', () => ({
   shuffledItems: [] as string[],
   shuffledIndex: 0 as number,
-  activeListName(): string {
-    if (this.activeList) return this.activeList.name;
 
-    return '';
+  isVisible(): boolean {
+    return !!this.$store.activeList;
   },
   currentShuffledItem(): string {
     return this.shuffledItems[this.shuffledIndex];
@@ -40,34 +68,18 @@ Alpine.data('app', () => ({
   nextShuffledItem(): void {
     if (this.hasNextShuffledItem()) this.shuffledIndex++;
   },
-  setActiveList(list: List): void {
-    this.activeList = list;
-  },
   unsetActiveList(): void {
-    this.activeList = null;
+    this.$store.activeList = false;
     this.shuffledItems = [];
     this.shuffledIndex = 0;
   },
   setShuffledItems(): void {
-    if (!this.activeList) return;
+    if (!this.$store.activeList) return;
 
-    this.shuffledItems = shuffle(this.activeList.items);
+    const items = (this.$store.activeList as List).items;
+
+    this.shuffledItems = shuffle(items);
     this.shuffledIndex = 0;
-  },
-  setEditList(): void {
-    this.editMode = true;
-  },
-  addItem(): void {
-    this.editList.items.push('');
-  },
-  saveList(): void {
-    if (!this.editList) return;
-
-    this.lists.push(this.editList);
-    localStorage.setItem('lists', JSON.stringify(lists));
-
-    this.editMode = false;
-    this.editList = { name: '', items: [''] };
   },
 }));
 
