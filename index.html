@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script type="module" src="/src/app.ts"></script>
+    <title>Shuffle List</title>
+  </head>
+  <body data-bs-theme="dark">
+    <nav class="navbar bg-body-tertiary">
+      <div class="container-fluid">
+        <a href="#" class="navbar-brand h1">Shuffle List</a>
+      </div>
+    </nav>
+    <div class="container-sm" x-data="app">
+      <!--List index-->
+      <div x-show="!activeList && !editMode">
+        <h1>Lists</h1>
+
+        <ul class="list-group">
+          <template x-for="list in lists">
+            <button type="button" class="list-group-item list-group-item-action" x-on:click="setActiveList(list)" x-text="list.name">
+            </button>
+          </template>
+        </ul>
+
+        <button type="button" class="btn btn-primary" x-on:click="setEditList()">New list</button>
+      </div>
+
+      <!--New list-->
+      <div x-show="editMode">
+        <h1>New list</h1>
+
+        <div class="mb-3">
+          <label for="name" class="form-label">Name</label>
+          <input type="text" class="form-control" id="name" placeholder="List name" x-model="editList.name">
+        </div>
+        <div class="mb-3">
+          <label for="items" class="form-label">Items</label>
+          <template  x-for="(_, index) in editList.items">
+            <input type="text" class="form-control" id="items" placeholder="Item name" x-model="editList.items[index]">
+          </template>
+        </div>
+
+        <button type="button" class="btn btn-primary" x-on:click="addItem">Add item</button>
+        <button type="button" class="btn btn-primary" x-on:click="saveList">Save</button>
+      </div>
+
+      <!--Active list-->
+      <div x-show="activeList">
+        <h1>List view</h1>
+
+        <h2 x-text="activeListName"></h2>
+
+        <button type="button" class="btn btn-primary" x-on:click="setShuffledItems">Shuffle</button>
+
+        <div class="card">
+          <div class="card-body">
+            <p x-text="currentShuffledItem"></p>
+          </div>
+
+          <button type="button" class="btn btn-secondary" x-show="hasNextShuffledItem" x-on:click="nextShuffledItem">Next</button>
+        </div>
+
+        <button type="button" class="btn btn-primary" x-on:click="unsetActiveList">Back to lists</button>
+      </div>
+    </div>
+  </body>
+</html>
