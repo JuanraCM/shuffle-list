@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Shuffle List</title>
+    <script type="module" crossorigin src="/assets/index-DHLlsq6Q.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-tK7EUtyc.css">
+  </head>
+  <body data-bs-theme="dark">
+    <div class="container">
+      <header class="py-3 bg-body-tertiary">
+        <div class="text-center h2">
+          Shuffle List
+        </div>
+      </header>
+    </div>
+    <div class="container px-4 py-5">
+      <div x-data="index" x-show="isVisible">
+        <h2 class="pb-2 border-bottom">Lists</h2>
+
+        <div class="pt-5 col-sm-6 mx-auto">
+          <ul class="list-group list-group-checkable d-grid gap-2 border-0">
+            <template x-for="list in $store.lists">
+              <button type="button" class="list-group-item list-group-item-action rounded-3 py-3" x-on:click="setActiveList(list)" x-text="list.name">
+              </button>
+            </template>
+          </ul>
+
+          <div class="py-3">
+            <button type="button" class="btn btn-primary" x-on:click="setEditList">New list</button>
+          </div>
+        </div>
+      </div>
+
+      <div x-data="form" x-show="isVisible()">
+        <h2 class="pb-2 border-bottom">New list</h2>
+
+        <form class="pt-5 col-sm-6 mx-auto" x-on:submit.prevent="saveList">
+          <div class="mb-3">
+            <label for="name" class="form-label">Name</label>
+            <input type="text" class="form-control" id="name" placeholder="List name" required x-model="$store.editList.name">
+          </div>
+
+          <div class="mb-3">
+            <label for="items" class="form-label">Items</label>
+            <template  x-for="(_, index) in $store.editList.items">
+              <div class="input-group mb-2">
+                <input type="text" class="form-control" id="items" placeholder="Item name" required x-model="$store.editList.items[index]">
+                <button class="btn btn-outline-danger" type="button" x-on:click="deleteItem(index)">Delete</button>
+              </div>
+            </template>
+          </div>
+
+          <div>
+            <button type="submit" class="btn btn-primary">Save</button>
+            <button type="button" class="btn btn-secondary" x-on:click="addItem">Add item</button>
+          </div>
+        </form>
+      </div>
+      <div x-data="active" x-show="isVisible()">
+        <h2 class="pb-2 border-bottom" x-text="$store.activeList?.name"></h2>
+
+        <div class="pt-5 col-sm-6 mx-auto">
+          <div class="card">
+            <div class="card-body p-10">
+              <h5 class="card-title text-center" x-text="currentShuffledItem"></h5>
+            </div>
+            <div class="card-footer">
+              <button type="button" class="btn btn-primary" x-on:click="setShuffledItems">Shuffle</button>
+              <button type="button" class="btn btn-secondary" x-show="hasNextShuffledItem" x-on:click="nextShuffledItem">Next</button>
+            </div>
+          </div>
+
+          <div class="py-3">
+            <button type="button" class="btn btn-primary" x-on:click="unsetActiveList">Back to lists</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
