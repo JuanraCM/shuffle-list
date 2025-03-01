@@ -41,6 +41,9 @@ Alpine.data('form', () => ({
   addItem(): void {
     (this.$store.editList as List).items.push('');
   },
+  deleteItem(index: number): void {
+    (this.$store.editList as List).items.splice(index, 1);
+  },
   saveList(): void {
     if (!this.$store.editList) return;
 
