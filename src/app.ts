@@ -29,6 +29,9 @@ Alpine.data('index', () => ({
   isVisible(): boolean {
     return !this.$store.activeList && !this.$store.newMode;
   },
+  emptyLists(): boolean {
+    return (this.$store.lists as List[]).length == 0;
+  },
   setActiveList(list: List): void {
     this.$store.activeList = list;
   },
