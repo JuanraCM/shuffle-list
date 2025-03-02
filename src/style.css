@@ -1,1 +1,5 @@
 @import 'bootstrap';
+
+.vh-25 {
+  height: 25vh !important;
+}

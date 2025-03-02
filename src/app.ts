@@ -98,6 +98,11 @@ Alpine.data('active', () => ({
     this.shuffledItems = shuffle(items);
     this.shuffledIndex = 0;
   },
+  itemsRemainingHint(): string {
+    if (!this.$store.activeList) return '';
+
+    return `Item ${this.shuffledIndex + 1} of ${this.shuffledItems.length}`;
+  },
 }));
 
 Alpine.start();
