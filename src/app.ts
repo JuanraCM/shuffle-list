@@ -22,39 +22,50 @@ const shuffle = (items: string[]): string[] => {
 
 Alpine.store('lists', JSON.parse(localStorage.getItem('lists') || '[]'));
 Alpine.store('activeList', false);
-Alpine.store('editMode', false);
-Alpine.store('editList', { name: '', items: [''] });
+Alpine.store('newMode', false);
+Alpine.store('newList', { name: '', items: [''] });
 
 Alpine.data('index', () => ({
   isVisible(): boolean {
-    return !this.$store.activeList && !this.$store.editMode;
+    return !this.$store.activeList && !this.$store.newMode;
   },
   setActiveList(list: List): void {
     this.$store.activeList = list;
   },
-  setEditList(): void {
-    this.$store.editMode = true;
+  setNewListMode(): void {
+    this.$store.newMode = true;
+  },
+  deleteList(index: number): void {
+    (this.$store.lists as List[]).splice(index, 1);
+    localStorage.setItem('lists', JSON.stringify(this.$store.lists));
   },
 }));
 
 Alpine.data('form', () => ({
   isVisible(): boolean {
-    return this.$store.editMode as boolean;
+    return this.$store.newMode as boolean;
   },
   addItem(): void {
-    (this.$store.editList as List).items.push('');
+    (this.$store.newList as List).items.push('');
+  },
+  deleteItemAllowed(index: number): boolean {
+    return index > 0;
   },
   deleteItem(index: number): void {
-    (this.$store.editList as List).items.splice(index, 1);
+    (this.$store.newList as List).items.splice(index, 1);
   },
   saveList(): void {
-    if (!this.$store.editList) return;
+    if (!this.$store.newList) return;
 
-    (this.$store.lists as List[]).push(this.$store.editList as List);
+    (this.$store.lists as List[]).push(this.$store.newList as List);
     localStorage.setItem('lists', JSON.stringify(this.$store.lists));
 
-    this.$store.editMode = false;
-    this.$store.editList = { name: '', items: [''] };
+    this.$store.newMode = false;
+    this.$store.newList = { name: '', items: [''] };
+  },
+  exitNewMode(): void {
+    this.$store.newMode = false;
+    this.$store.newList = { name: '', items: [''] };
   },
 }));
 
