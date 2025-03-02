@@ -24,7 +24,11 @@
           <ul class="list-group list-group-checkable d-grid gap-2 border-0">
             <template x-for="(list, index) in $store.lists">
               <li class="list-group-item list-group-item-action d-flex justify-content-between align-items-center rounded-3 py-3" x-on:click="setActiveList(list)">
-                <span x-text="list.name"></span>
+                <div class="ms-2 me-auto">
+                  <div class="fw-bold" x-text="list.name"></div>
+                  <span x-text="listItemsInfo(list)"></span>
+                </div>
+
                 <button type="button" class="btn btn-dark" x-on:click="deleteList(index)">Delete</button>
               </li>
             </template>

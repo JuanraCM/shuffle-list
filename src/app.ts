@@ -39,6 +39,12 @@ Alpine.data('index', () => ({
     (this.$store.lists as List[]).splice(index, 1);
     localStorage.setItem('lists', JSON.stringify(this.$store.lists));
   },
+  listItemsInfo(list: List): string {
+    const itemsLength = list.items.length;
+    const pluralize = itemsLength > 1;
+
+    return `${list.items.length} item${(pluralize && 's') || ''}`;
+  },
 }));
 
 Alpine.data('form', () => ({
