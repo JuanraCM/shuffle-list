@@ -3,3 +3,7 @@
 .vh-25 {
   height: 25vh !important;
 }
+
+.d-flex-respectful {
+  display: flex;
+}

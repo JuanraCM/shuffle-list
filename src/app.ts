@@ -1,4 +1,5 @@
 import './style.css';
+import Timer from './timer.ts';
 import Alpine from 'alpinejs';
 
 window.Alpine = Alpine;
@@ -81,6 +82,7 @@ Alpine.data('form', () => ({
 Alpine.data('active', () => ({
   shuffledItems: [] as string[],
   shuffledIndex: 0 as number,
+  timer: new Timer(),
 
   isVisible(): boolean {
     return !!this.$store.activeList;
@@ -92,12 +94,16 @@ Alpine.data('active', () => ({
     return !!this.shuffledItems[this.shuffledIndex + 1];
   },
   nextShuffledItem(): void {
-    if (this.hasNextShuffledItem()) this.shuffledIndex++;
+    if (!this.hasNextShuffledItem()) return;
+
+    this.shuffledIndex++;
+    this.timer.start();
   },
   unsetActiveList(): void {
     this.$store.activeList = false;
     this.shuffledItems = [];
     this.shuffledIndex = 0;
+    this.timer.stop();
   },
   setShuffledItems(): void {
     if (!this.$store.activeList) return;
@@ -106,11 +112,16 @@ Alpine.data('active', () => ({
 
     this.shuffledItems = shuffle(items);
     this.shuffledIndex = 0;
+
+    this.timer.start();
   },
   itemsRemainingHint(): string {
     if (!this.$store.activeList) return '';
 
     return `Item ${this.shuffledIndex + 1} of ${this.shuffledItems.length}`;
+  },
+  timeRemaining(): string {
+    return `${this.timer.remaining}s`;
   },
 }));
 
