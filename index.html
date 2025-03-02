@@ -6,8 +6,8 @@
     <link rel="manifest" href="manifest.json" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Shuffle List</title>
-    <script type="module" crossorigin src="/shuffle-list/assets/index-CA-egaX4.js"></script>
-    <link rel="stylesheet" crossorigin href="/shuffle-list/assets/index-BxMuxive.css">
+    <script type="module" crossorigin src="/shuffle-list/assets/index-DoLyZBR3.js"></script>
+    <link rel="stylesheet" crossorigin href="/shuffle-list/assets/index-Ca7K7JCK.css">
   </head>
   <body data-bs-theme="dark">
     <div class="container-fluid">
@@ -74,7 +74,9 @@
 
         <div class="pt-5 col-sm-6 mx-auto">
           <div class="card">
-            <div class="card-header text-center" x-show="currentShuffledItem" x-text="itemsRemainingHint">
+            <div class="card-header d-flex-respectful justify-content-between" x-show="currentShuffledItem">
+              <span x-text="itemsRemainingHint"></span>
+              <span x-text="timeRemaining"></span>
             </div>
             <div class="card-body align-content-center text-center p-10 vh-25">
               <h5 x-text="currentShuffledItem"></h5>
